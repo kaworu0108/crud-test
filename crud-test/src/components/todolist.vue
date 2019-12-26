@@ -44,7 +44,7 @@
       </tr>
 
       <!-- content -->
-      <tr v-for="item in list"
+      <tr v-for="item in results.data"
         :key="item._id">
         <td>{{item.name}}</td>
         <td>{{item.price}}</td>
@@ -59,10 +59,9 @@
 
 <script>
 import axios from "axios";
+
 export default {
   name: "crudlist",
-  apiurl:
-    "https://restfull-api-todolist.herokuapp.com/api/v1/orders?limit=3&page=1",
   props: {
     msg: String
   },
@@ -75,32 +74,6 @@ export default {
       additemUser: "訂購人姓名",
       additemOther: "備註",
       checkForm: "",
-      list: [
-        {
-          createdAt: "2019-12-24T08:38:51.412Z",
-          _id: "5e01ced27c5181128689db2b",
-          name: "巧克力奶茶",
-          price: 40,
-          username: "Vincent",
-          description: "少冰半糖"
-        },
-        {
-          createdAt: "2019-12-24T08:38:51.412Z",
-          _id: "5e01c160f0cd15116ed6a848",
-          name: "咖啡牛奶",
-          price: 55,
-          username: "王小明",
-          description: "少冰全糖"
-        },
-        {
-          createdAt: "2019-12-24T08:38:51.412Z",
-          _id: "5e01cbef705d1712406b6074",
-          name: "焦糖可可",
-          price: 45,
-          username: "jessica",
-          description: "少冰全糖"
-        }
-      ],
       tableTitle: [
         {
           title: "飲料名稱"
@@ -117,24 +90,25 @@ export default {
       ]
     };
   },
+
   mounted() {
     axios
       .get(
         "https://restfull-api-todolist.herokuapp.com/api/v1/orders?limit=3&page=1"
       )
       .then(response => {
-        this.results = response.data.results;
+        this.results = response.data.data;
       });
   },
   methods: {
     addlist() {
       var days = new Date();
-      this.list.push({
-        createdAt: days
-        // name: this.additem,
-        // price: this.addprice,
-        // username: this.username,
-        // description: this.description
+      this.results.push({
+        createdAt: days,
+        name: this.additem,
+        price: this.addprice,
+        username: this.username,
+        description: this.description
       });
     },
     editlist() {},
