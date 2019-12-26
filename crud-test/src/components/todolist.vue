@@ -1,38 +1,43 @@
 <template>
   <div class="crudlist">
     <h1>飲料訂單列表</h1>
-    <form id="app"
+    <!-- <form id="app"
       @submit="checkForm"
       action="/something"
-      method="post">
-      <div>
-        <label for="additemName">{{additemName}}</label>
-        <input type="text"
-          name="additemName"
-          id="additemName"
-          min="0">
-        <!-- 2 -->
-        <label for="additemNumber">{{additemNumber}}</label>
-        <input type="text"
-          name="additemNumber"
-          id="additemNumber"
-          min="0">
-        <!-- 3 -->
-        <label for="additemUser">{{additemUser}}</label>
-        <input type="text"
-          name="additemUser"
-          id="additemUser"
-          min="0">
-        <!-- 4 -->
-        <label for="additemOther">{{additemOther}}</label>
-        <input type="text"
-          name="additemOther"
-          id="additemOther"
-          min="0">
-        <button @click="addlist">新增訂單</button>
-      </div>
+      method="post"> -->
+    <div>
 
-    </form>
+      <label for="additemName">{{additemName}}</label>
+      <input type="text"
+        name="additemName"
+        id="additemName"
+        min="0"
+        v-model.trim="imput">
+      <!-- 2 -->
+      <label for="additemNumber">{{additemNumber}}</label>
+      <input type="text"
+        name="additemNumber"
+        id="additemNumber"
+        min="0"
+        v-model.trim="imput2">
+      <!-- 3 -->
+      <label for="additemUser">{{additemUser}}</label>
+      <input type="text"
+        name="additemUser"
+        id="additemUser"
+        min="0"
+        v-model.trim="imput3">
+      <!-- 4 -->
+      <label for="additemOther">{{additemOther}}</label>
+      <input type="text"
+        name="additemOther"
+        id="additemOther"
+        min="0"
+        v-model.trim="imput4">
+      <button @click="addlist">新增訂單</button>
+    </div>
+
+    <!-- </form> -->
 
     <br>
     <hr>
@@ -51,7 +56,7 @@
         <td>{{item.username}}</td>
         <td>{{item.description}}</td>
         <button @click="editlist">編輯</button>
-        <button @click="deletelist">刪除</button>
+        <button @click="deletelist(results.data.id)">刪除</button>
       </tr>
     </table>
   </div>
@@ -65,15 +70,19 @@ export default {
   props: {
     msg: String
   },
-
   data() {
     return {
-      results: [],
+      results: {},
       additemName: "飲料名稱",
       additemNumber: "價格",
       additemUser: "訂購人姓名",
       additemOther: "備註",
       checkForm: "",
+      listid: "編號",
+      imput: "",
+      imput2: "",
+      imput3: "",
+      imput4: "",
       tableTitle: [
         {
           title: "飲料名稱"
@@ -90,29 +99,64 @@ export default {
       ]
     };
   },
-
   mounted() {
     axios
       .get(
         "https://restfull-api-todolist.herokuapp.com/api/v1/orders?limit=3&page=1"
       )
-      .then(response => {
-        this.results = response.data.data;
+      .then(res => {
+        this.results = res.data.data;
       });
   },
   methods: {
     addlist() {
       var days = new Date();
-      this.results.push({
-        createdAt: days,
-        name: this.additem,
-        price: this.addprice,
-        username: this.username,
-        description: this.description
-      });
+
+      const url = "https://restfull-api-todolist.herokuapp.com/api/v1/orders";
+      axios
+        .post(
+          url,
+          {
+            createdAt: days,
+            _id: this.results.data.length + 1,
+            name: this.imput,
+            price: this.imput2,
+            username: this.imput3,
+            description: this.imput4,
+            __v: 0
+          },
+          {
+            "Content-Type": "application / json"
+          }
+        )
+        .then(res => {
+          console.log(res.data);
+          var priceTash = Number(this.res.data.price);
+          var listid = this.res.data._id.str();
+          this.results.push({
+            createdAt: days,
+            _id: listid,
+            name: this.res.data.name,
+            price: priceTash,
+            username: this.res.data.username,
+            description: this.res.data.description,
+            __v: 0
+          });
+        });
     },
+
     editlist() {},
-    deletelist() {}
+    deletelist(id) {
+      if (confirm("確認要刪除嗎?")) {
+        axios
+          .delete(
+            `https://restfull-api-todolist.herokuapp.com/api/v1/orders/${id}`
+          )
+          .then(res => {
+            console.log(res);
+          });
+      } else alert("已取消刪除操作");
+    }
   }
 };
 </script>
