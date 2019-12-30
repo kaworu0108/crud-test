@@ -115,13 +115,10 @@ export default {
         .post(
           url,
           {
-            // createdAt: days,
-            // _id: this.results.data.length + 1,
             name: this.imput,
             price: this.imput2,
             username: this.imput3,
             description: this.imput4
-            // __v: 0
           },
           {
             "Content-Type": "application / json"
@@ -130,15 +127,11 @@ export default {
         .then(res => {
           console.log(res.data);
           var priceTash = Number(this.res.data.price);
-          // var listid = this.res.data._id.str();
           this.results.push({
-            // createdAt: days,
-            // _id: listid,
             name: this.res.data.name,
             price: priceTash,
             username: this.res.data.username,
             description: this.res.data.description
-            // __v: 0
           });
         });
     },
