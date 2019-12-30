@@ -101,29 +101,27 @@ export default {
   },
   mounted() {
     axios
-      .get(
-        "https://restfull-api-todolist.herokuapp.com/api/v1/orders?limit=3&page=1"
-      )
+      .get("https://restfull-api-todolist.herokuapp.com/api/v1/orders")
       .then(res => {
         this.results = res.data.data;
       });
   },
   methods: {
     addlist() {
-      var days = new Date();
+      // var days = new Date();
 
       const url = "https://restfull-api-todolist.herokuapp.com/api/v1/orders";
       axios
         .post(
           url,
           {
-            createdAt: days,
-            _id: this.results.data.length + 1,
+            // createdAt: days,
+            // _id: this.results.data.length + 1,
             name: this.imput,
             price: this.imput2,
             username: this.imput3,
-            description: this.imput4,
-            __v: 0
+            description: this.imput4
+            // __v: 0
           },
           {
             "Content-Type": "application / json"
@@ -132,15 +130,15 @@ export default {
         .then(res => {
           console.log(res.data);
           var priceTash = Number(this.res.data.price);
-          var listid = this.res.data._id.str();
+          // var listid = this.res.data._id.str();
           this.results.push({
-            createdAt: days,
-            _id: listid,
+            // createdAt: days,
+            // _id: listid,
             name: this.res.data.name,
             price: priceTash,
             username: this.res.data.username,
-            description: this.res.data.description,
-            __v: 0
+            description: this.res.data.description
+            // __v: 0
           });
         });
     },
